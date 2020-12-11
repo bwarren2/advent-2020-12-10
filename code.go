@@ -69,26 +69,27 @@ func Part1(filename string) (count int) {
 	return len(ones) * len(threes)
 }
 
+var Memo = make(map[int]int)
+
 // ConnectSum does work
 func ConnectSum(target int, adapters []int) (total int) {
 	// fmt.Println(target, adapters)
+	if val, ok := Memo[target]; ok {
+		return val
+	}
 	if len(adapters) == 0 {
 		return 1
 	}
 	for idx, value := range adapters {
 		if value > target+3 {
 			continue
-		} else if value > target {
-			newAdapters := make([]int, 0)
-			for idx2, value2 := range adapters {
-				if idx != idx2 && value2 > value {
-					newAdapters = append(newAdapters, value2)
-				}
+		} else {
+			if idx+1 <= len(adapters) {
+				total += ConnectSum(value, adapters[idx+1:])
 			}
-			total += ConnectSum(value, newAdapters)
 		}
 	}
-
+	Memo[target] = total
 	return total
 }
 
