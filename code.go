@@ -1,10 +1,12 @@
-package advent20201210
+package main
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"sort"
 	"strconv"
+	"time"
 )
 
 // NumsFromFile gets the nums
@@ -72,7 +74,7 @@ func Part1(filename string) (count int) {
 var Memo = make(map[int]int)
 
 // ConnectSum does work
-func ConnectSum(target int, adapters []int) (total int) {
+func ConnectSum(target int, adapters []int) int {
 	// fmt.Println(target, adapters)
 	if val, ok := Memo[target]; ok {
 		return val
@@ -82,15 +84,14 @@ func ConnectSum(target int, adapters []int) (total int) {
 	}
 	for idx, value := range adapters {
 		if value > target+3 {
-			continue
+			break
 		} else {
 			if idx+1 <= len(adapters) {
-				total += ConnectSum(value, adapters[idx+1:])
+				Memo[target] += ConnectSum(value, adapters[idx+1:])
 			}
 		}
 	}
-	Memo[target] = total
-	return total
+	return Memo[target]
 }
 
 // Part2 answers part 2
@@ -102,4 +103,11 @@ func Part2(filename string) (count int) {
 
 	return ConnectSum(0, nums)
 
+}
+
+func main() {
+	start := time.Now()
+	fmt.Println("part 2:", Part2("input.txt"))
+	end := time.Now()
+	fmt.Println(end.Sub(start))
 }
